@@ -7,7 +7,6 @@ metadata:
     openshift-pipelines.tekton.dev/namespace-reconcile-version: 1.8.0
     openshift.io/description: ''
     openshift.io/display-name: ''
-    openshift.io/requester: 'kube:admin'
 spec:
   finalizers:
     - kubernetes

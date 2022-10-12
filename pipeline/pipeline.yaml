@@ -1,26 +1,8 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  creationTimestamp: '2022-10-12T16:22:33Z'
-  generation: 6
-  managedFields:
-    - apiVersion: tekton.dev/v1beta1
-      fieldsType: FieldsV1
-      fieldsV1:
-        'f:spec':
-          .: {}
-          'f:finally': {}
-          'f:params': {}
-          'f:resources': {}
-          'f:tasks': {}
-          'f:workspaces': {}
-      manager: Mozilla
-      operation: Update
-      time: '2022-10-12T16:22:33Z'
   name: patternfly-frontend-build
   namespace: pf
-  resourceVersion: '986950'
-  uid: a37e78fb-f96d-4854-8ec6-c30ba8d2f64d
 spec:
   params:
     - default: 'https://github.com/mmartofel/patternfly-frontend-starter'
