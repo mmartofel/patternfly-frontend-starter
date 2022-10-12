@@ -1,0 +1,94 @@
+<%- include('templates/header.ejs'); %>
+
+<%- include('templates/nav.ejs', {page: 'network'}); %>
+
+<div class="blank-slate-pf container-pf-nav-pf-vertical">
+	<h1>
+		<span class="pficon pficon-network small"></span>
+		Nazwa ekranu
+	</h1>
+
+	<div class="row">
+		<p class="col-lg-6 mb-5">
+			Opis funkcjonalności.
+		</p>
+	</div>
+
+	<div class="row row-cards-pf">
+		<div class="col-lg-6 microservice hide">
+			<div class="card-pf card-pf-view">
+				<div class="card-pf-body">
+					<div class="row">
+						<div class="col-xs-7">
+							<h2 class="card-pf-title mb-3">
+								<span class="fa fa-satellite-dish"></span>
+								Jakiś tam stan
+							</h2>
+							<p>
+								Tutaj dane:
+							</p>
+						</div>
+						<div class="col-xs-5">
+							<h2 class="card-pf-title mb-3">
+								Remote Pods
+							</h2>
+								<!-- dynamic element -->
+								<ul id="cluster-pods"></ul>
+								<!-- and of dynamic element -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div><!-- /container -->
+
+<%- include('templates/footer.ejs', {excludeClosingTags: true}); %>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	updateColors();
+});
+
+function updateColors() {
+	var clusterPods = $('#cluster-pods'),
+		podItems = clusterPods.find('li');
+
+	$.get('/network/colors?timestamp=' + $.now(), function(data) {
+		if (data !== undefined && data.hasOwnProperty('pod') && data.hasOwnProperty('color')) {
+			var li = $('#' + data.pod);
+			if (li.length > 0) {
+				// update
+				li.replaceWith('<li id="' + data.pod + '" data-timestamp="' + $.now() + '"><div style="padding: 10px; background-color: ' + data.color + '">' + data.pod + '</div></li>');
+			} else {
+				// create
+				clusterPods.append('<li id="' + data.pod + '" data-timestamp="' + $.now() + '"><div style="padding: 10px; background-color: ' + data.color + '">' + data.pod + '</div></li>');
+			}
+		}
+	});
+
+	if (podItems.length === 0) {
+		clusterPods.parents('div.microservice').addClass('hide');
+	} else {
+		clusterPods.parents('div.microservice').removeClass('hide');
+		// matchHeight the contents of each .card-pf and then the .card-pf itself
+		$(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
+		$(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
+		$(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+		$(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
+		clusterPods.find('li').each(function () {
+			var currLi = $(this);
+			// Remove <li> elements older than 10 seconds
+			if (Date.now() - new Date(currLi.data('timestamp')) >= 10000) {
+				currLi.remove();
+			}
+		});
+	}
+
+	setTimeout(updateColors, 1000);
+}
+</script>
+
+</body>
+</html>
